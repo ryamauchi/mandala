@@ -108,7 +108,7 @@ def rmatmul(lhs, rhs):
     return out
 
 
-def install_variable_arithmetics():
+def install_node_arithmetics():
     Node.__neg__ = neg
     Node.__abs__ = absolute
     Node.__add__ = add
