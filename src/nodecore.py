@@ -1,3 +1,6 @@
+import types
+
+
 class Node(object):
     '''Node of computational graph.
 
@@ -14,6 +17,8 @@ class Node(object):
         data: Computation result of this Node.
     '''
     def __init__(self, func, args):
+        if not isinstance(func, types.FunctionType):
+            raise TypeError('func mast be a function.')
         self.func = func
         self._data = None
         _args = []
@@ -21,7 +26,7 @@ class Node(object):
             args = [args]
         for arg in args:
             if not isinstance(arg, Node):
-                raise ValueError('args must be Node or list(tuple) of Nodes.')
+                raise TypeError('args must be Node or list(tuple) of Nodes.')
             _args.append(arg)
         self.args = tuple(_args)
 
