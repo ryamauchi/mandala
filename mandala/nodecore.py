@@ -17,8 +17,6 @@ class Node(object):
         data: Computation result of this Node.
     '''
     def __init__(self, func, args):
-        if not isinstance(func, types.FunctionType):
-            raise TypeError('func mast be a function.')
         self.func = func
         self._data = None
         _args = []
