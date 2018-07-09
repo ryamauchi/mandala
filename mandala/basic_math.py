@@ -1,5 +1,5 @@
-from nodecore import Node
-from nodecore import Variable
+from mandala.nodecore import Node
+from mandala.nodecore import Variable
 
 
 # support function
