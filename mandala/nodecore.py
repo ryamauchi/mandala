@@ -24,7 +24,7 @@ class Node(object):
             args = [args]
         for arg in args:
             if not isinstance(arg, Node):
-                raise TypeError('args must be Node or list(tuple) of Nodes.')
+                arg = Variable(arg)
             _args.append(arg)
         self.args = tuple(_args)
 
