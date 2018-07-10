@@ -1,6 +1,3 @@
-import types
-
-
 class Node(object):
     '''Node of computational graph.
 
