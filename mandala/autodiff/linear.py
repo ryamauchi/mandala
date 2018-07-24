@@ -9,7 +9,7 @@ from mandala.autodiff import initializers
 
 def linear_forward(x, W, b):
     xp = cuda.get_array_module(x)
-    y = xp.matmul(x, W.T)
+    y = xp.dot(x, W.T)
     if b is not None:
         y += b
     return y
@@ -17,7 +17,7 @@ def linear_forward(x, W, b):
 
 def linear_backward_W(x, gy):
     xp = cuda.get_array_module(x)
-    gW = xp.matmul(gy.T, x)
+    gW = xp.dot(gy.T, x)
     return gW
 
 
@@ -29,7 +29,7 @@ def linear_backward_b(gy):
 
 def linear_backward_x(W, gy):
     xp = cuda.get_array_module(W)
-    gx = xp.matmul(gy, W)
+    gx = xp.dot(gy, W)
     return gx
 
 
