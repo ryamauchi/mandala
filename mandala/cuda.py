@@ -4,7 +4,8 @@ from mandala.nodecore import Variable
 try:
     import cupy
     available = True
-except:
+except Exception as e:
+    _resolution_error = e
     available = False
 
 
