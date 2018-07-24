@@ -14,7 +14,7 @@ class Node(object):
     Attributes:
         data: Computation result of this Node.
     '''
-    def __init__(self, func, args, retain_data=False):
+    def __init__(self, func, args, retain_data=True):
         self.func = func
         self.retain_data = retain_data
         self._data = None
@@ -41,7 +41,7 @@ class Node(object):
         if self._reference_count > 0:
             self._reference_count -= 1
 
-        if self._reference_count == 0:
+        if self._reference_count == 0 and not self.retain_data:
             self._data = None
 
     def __del__(self):
@@ -75,6 +75,7 @@ class Variable(Node):
         self.func = None
         self.args = ()
         self._data = data
+        self.retain_data = True
         self._reference_count = 0
 
     def apply_func(self):
