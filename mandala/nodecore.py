@@ -9,19 +9,24 @@ class Node(object):
     Args:
         func (function): The function applied to the argument.
         args (Node, list or tuple): Arguments of the function.
+        retain_data (bool): If True, retain computation result.
 
     Attributes:
         data: Computation result of this Node.
     '''
-    def __init__(self, func, args):
+    def __init__(self, func, args, retain_data=False):
         self.func = func
+        self.retain_data = retain_data
         self._data = None
+        self._reference_count = 0
+
         _args = []
         if not isinstance(args, (tuple, list)):
             args = [args]
         for arg in args:
             if not isinstance(arg, Node):
                 arg = Variable(arg)
+            arg._increment_ref_count()
             _args.append(arg)
         self.args = tuple(_args)
 
@@ -29,11 +34,33 @@ class Node(object):
         expanded_args = [arg.data for arg in self.args]
         return self.func(*expanded_args)
 
+    def _increment_ref_count(self):
+        self._reference_count += 1
+
+    def _decrement_ref_count(self):
+        if self._reference_count > 0:
+            self._reference_count -= 1
+
+        if self._reference_count == 0:
+            self._data = None
+
+    def __del__(self):
+        for arg in self.args:
+            arg._decrement_ref_count()
+        del self
+
     @property
     def data(self):
+        self._decrement_ref_count()
+
         if self._data is None:
-            self._data = self.apply_func()
-        return self._data
+            data = self.apply_func()
+            if self._reference_count > 0 or self.retain_data:
+                self._data = data
+        else:
+            data = self._data
+
+        return data
 
 
 class Variable(Node):
@@ -48,6 +75,7 @@ class Variable(Node):
         self.func = None
         self.args = ()
         self._data = data
+        self._reference_count = 0
 
     def apply_func(self):
         raise NotImplementedError()
