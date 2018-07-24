@@ -21,8 +21,9 @@ def linear_backward_W(x, gy):
     return gW
 
 
-def linear_backward_b(b, gy):
-    gb = gy.sum(axis=0)
+def linear_backward_b(gy):
+    xp = cuda.get_array_module(gy)
+    gb = xp.sum(gy, axis=0)
     return gb
 
 
@@ -44,7 +45,7 @@ class LinearFunction(autodiff.AutoDiff):
         gW = Node(linear_backward_W, [x, gy])
         gx = Node(linear_backward_x, [W, gy])
         if b is not None:
-            gb = Node(linear_backward_b, [W, gy])
+            gb = Node(linear_backward_b, [gy])
         else:
             gb = None
         return gx, gW, gb
