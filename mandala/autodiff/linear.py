@@ -3,7 +3,7 @@ from mandala import cuda
 from mandala.nodecore import Node
 from mandala.nodecore import Variable
 from mandala.autodiff import autodiff
-from mandala.autodiff import linear
+from mandala.autodiff import layer
 from mandala.autodiff import initializers
 
 
@@ -22,7 +22,6 @@ def linear_backward_W(x, gy):
 
 
 def linear_backward_b(b, gy):
-    xp = cuda.get_array_module(b)
     gb = gy.sum(axis=0)
     return gb
 
@@ -58,7 +57,7 @@ class Linear(layer.Layer):
         if nobias:
             self.b = None
         else:
-            self.b = Variable(numpy.zeros(out_ch, dtype=np.float32))
+            self.b = Variable(numpy.zeros(out_ch, dtype=numpy.float32))
 
     def __call__(self, x):
         return LinearFunction()([x, self.W, self.b])
