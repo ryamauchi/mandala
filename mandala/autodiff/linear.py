@@ -2,6 +2,7 @@ from mandala import cuda
 from mandala.nodecore import Node
 from mandala.nodecore import Variable
 from mandala.autodiff import autodiff
+from mandala.autodiff import linear
 
 
 def linear_forward(x, W, b):
