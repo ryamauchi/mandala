@@ -1,4 +1,4 @@
-import numpy
+from mandala import cuda
 from mandala.nodecore import Node
 from mandala import basic_math
 from mandala.autodiff import autodiff
@@ -94,7 +94,8 @@ class Pow(autodiff.AutoDiff):
             return x1 * (x0 ** (x1 - 1)) * gy
 
         def _calc_gx1(x0, x1, gy):
-            return x0 ** x1 * numpy.log(x0)
+            xp = cuda.get_array_module(x0)
+            return x0 ** x1 * xp.log(x0)
 
         gx0 = Node(_calc_gx0, [*xs, gy])
         gx1 = Node(_calc_gx1, [*xs, gy])

@@ -1,4 +1,4 @@
-import numpy
+from mandala import cuda
 from mandala.nodecore import Node
 from mandala.autodiff import autodiff
 
@@ -8,7 +8,8 @@ def get_item_forward(x, slices):
 
 
 def get_item_backward(x, slices, gy):
-    gx = numpy.zeros_like(x)
+    xp = cuda.get_array_module(x)
+    gx = xp.zeros_like(x)
     gx[slices] = gy
     return gx
 
