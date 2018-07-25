@@ -108,7 +108,7 @@ class Log(autodiff.AutoDiff):
 
     def backward(self, xs, gy):
         x, = xs
-        gx = div(1, gy)
+        gx = mul(div(1, x), gy)
         return gx,
 
 
