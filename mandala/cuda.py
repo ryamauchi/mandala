@@ -1,12 +1,22 @@
 import numpy
 from mandala.nodecore import Variable
 
+available = False
+cudnn_enable = False
+
 try:
     import cupy
     available = True
 except Exception as e:
     _resolution_error = e
-    available = False
+
+if available:
+    try:
+        import cupy.cudnn
+        cudnn_enable = True
+        cudnn = cupy.cudnn
+    except Exception as e:
+        _resolution_error = e
 
 
 def get_array_module(*args):
