@@ -110,6 +110,25 @@ def rpow(rhs, lhs):
     return Pow()([lhs, rhs])
 
 
+class Log(autodiff.AutoDiff):
+    def forward(self, xs):
+        def _log(x):
+            xp = cuda.get_array_module(x)
+            return xp.log(x)
+        x, = xs
+        y = Node(_log, [x])
+        return y
+
+    def backward(self, xs, gy):
+        x, = xs
+        gx = basic_math.div(1, gy)
+        return gx,
+
+
+def log(x):
+    return Log()([x])
+
+
 class Neg(autodiff.AutoDiff):
 
     def forward(self, xs):
