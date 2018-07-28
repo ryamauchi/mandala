@@ -59,6 +59,11 @@ class Node(object):
             data = self._data
         return data
 
+    @property
+    def shape(self):
+        # TODO: calc shape from shape of args.
+        return self.data.shape
+
 
 class Variable(Node):
     '''Start node of computational graph.
