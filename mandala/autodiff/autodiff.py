@@ -1,5 +1,5 @@
-from mandala.nodecore import Node
-from mandala.nodecore import Variable
+from mandala import Node
+from mandala import Variable
 
 
 class AutoDiff(object):

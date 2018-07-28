@@ -1,4 +1,4 @@
-from mandala.nodecore import Variable
+from mandala import Variable
 
 
 class Layer(object):

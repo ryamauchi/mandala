@@ -1,5 +1,5 @@
 import numpy
-from mandala.nodecore import Variable
+from mandala import Variable
 
 available = False
 cudnn_enable = False

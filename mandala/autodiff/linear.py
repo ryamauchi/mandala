@@ -1,7 +1,7 @@
 import numpy
 from mandala import cuda
-from mandala.nodecore import Node
-from mandala.nodecore import Variable
+from mandala import Node
+from mandala import Variable
 from mandala.autodiff import autodiff
 from mandala.autodiff import layer
 from mandala.autodiff import initializers

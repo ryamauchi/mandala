@@ -1,4 +1,4 @@
-from mandala.nodecore import Node
+from mandala import Node
 
 
 def get_item(x, slices):

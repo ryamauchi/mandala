@@ -1,5 +1,5 @@
 from mandala import cuda
-from mandala.nodecore import Node
+from mandala import Node
 from mandala import basic_math
 from mandala.autodiff import autodiff
 

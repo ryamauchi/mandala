@@ -1,6 +1,6 @@
 import cupy
 from mandala import cuda
-from mandala.nodecore import Node
+from mandala import Node
 from mandala.autodiff import autodiff
 
 
