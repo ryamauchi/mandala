@@ -4,10 +4,10 @@ from mandala.nodecore import Variable
 
 class AutoDiff(object):
     def forward(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def backward(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def __call__(self, xs):
         y = self.forward(xs)

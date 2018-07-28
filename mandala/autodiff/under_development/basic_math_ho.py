@@ -70,11 +70,11 @@ def rdiv(rhs, lhs):
 
 
 def floordiv(lhs, rhs):
-    raise NotImplementedError
+    raise NotImplementedError()
 
 
 def rfloordiv(rhs, lhs):
-    raise NotImplementedError
+    raise NotImplementedError()
 
 
 class Pow(autodiff.AutoDiff):
@@ -108,7 +108,7 @@ class Log(autodiff.AutoDiff):
 
     def backward(self, xs, gy):
         x, = xs
-        gx = div(1, gy)
+        gx = mul(div(1, x), gy)
         return gx,
 
 
@@ -131,15 +131,15 @@ def neg(x):
 
 
 def absolute(a):
-    raise NotImplementedError
+    raise NotImplementedError()
 
 
 def matmul(lhs, rhs):
-    raise NotImplementedError
+    raise NotImplementedError()
 
 
 def rmatmul(lhs, rhs):
-    raise NotImplementedError
+    raise NotImplementedError()
 
 
 def install_node_arithmetics():
