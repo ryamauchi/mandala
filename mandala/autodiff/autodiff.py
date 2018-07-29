@@ -9,8 +9,12 @@ class AutoDiff(object):
     def backward(self):
         raise NotImplementedError()
 
-    def __call__(self, xs):
-        y = self.forward(xs)
+    def __call__(self, xs, kargs=None):
+        if kargs is None:
+            y = self.forward(xs)
+        else:
+            y = self.forward(xs, kargs)
+
         if isinstance(y, (tuple, list)):
             for yi in y:
                 yi.creator = self

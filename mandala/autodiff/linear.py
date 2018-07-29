@@ -36,8 +36,7 @@ def linear_backward_x(W, gy):
 class LinearFunction(autodiff.AutoDiff):
 
     def forward(self, xs):
-        x, W, b = xs
-        y = Node(linear_forward, [x, W, b])
+        y = Node(linear_forward, xs)
         return y
 
     def backward(self, xs, gy):

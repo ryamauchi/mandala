@@ -10,6 +10,7 @@ if cuda.cudnn_enable:
 
 
 def forward_relu(x):
+    
     xp = cuda.get_array_module(x)
 
     if xp == cupy and cuda.cudnn_enable:
