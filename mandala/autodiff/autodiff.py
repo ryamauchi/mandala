@@ -9,9 +9,7 @@ class AutoDiff(object):
     def backward(self):
         raise NotImplementedError()
 
-    def __call__(self, xs, **kwargs):
-        self.kwargs = kwargs
-
+    def __call__(self, xs):
         y = self.forward(xs)
         if isinstance(y, (tuple, list)):
             for yi in y:
@@ -22,7 +20,7 @@ class AutoDiff(object):
 
 
 def backward(y, gy=Variable(1.)):
-    xs = y.args
+    xs = y.input_nodes
     gxs = y.creator.backward(xs, gy)
     for x, gx in zip(xs, gxs):
         if not isinstance(x, Node):
