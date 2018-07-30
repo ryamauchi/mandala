@@ -121,7 +121,8 @@ class Log(autodiff.AutoDiff):
 
     def backward(self, xs, gy):
         x, = xs
-        gx = basic_math.div(1, gy)
+        gx = basic_math.mul(
+                basic_math.div(1, x), gy)
         return gx,
 
 

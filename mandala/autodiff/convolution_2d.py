@@ -56,7 +56,6 @@ class Convolution2DFunction(autodiff.AutoDiff):
         self.cover_all = cover_all
 
     def forward(self, xs):
-        x, W, b = xs
         y = Node(convolution_2d_forward, xs,
                  sy=self.sy, sx=self.sx, ph=self.ph, pw=self.pw,
                  cover_all=self.cover_all, dy=self.dy, dx=self.dx,
