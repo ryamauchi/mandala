@@ -10,17 +10,15 @@ class Node(object):
         func (function): The function applied to the argument.
         args (Node, list or tuple): Arguments of the function.
         retain_data (bool): If True, retain computation result.
-        kargs (dict): Non-node argument of function.
 
     Attributes:
         data: Computation result of this Node.
     '''
-    def __init__(self, func, args, kargs={}, retain_data=False):
+    def __init__(self, func, args, retain_data=False):
         self.func = func
         self.retain_data = retain_data
         self._data = None
         self._reference_count = 0
-        self.kargs = kargs
 
         _args = []
         if not isinstance(args, (tuple, list)):
@@ -34,7 +32,7 @@ class Node(object):
 
     def apply_func(self):
         expanded_args = [arg.data for arg in self.args]
-        return self.func(*expanded_args, **self.kargs)
+        return self.func(*expanded_args)
 
     def _increment_ref_count(self):
         self._reference_count += 1
@@ -49,6 +47,9 @@ class Node(object):
     def __del__(self):
         for arg in self.args:
             arg._decrement_ref_count()
+
+    def __len__(self):
+        return len(self.data)
 
     @property
     def data(self):
