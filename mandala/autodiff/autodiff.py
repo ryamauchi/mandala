@@ -9,7 +9,7 @@ class AutoDiff(object):
     def backward(self):
         raise NotImplementedError()
 
-    def __call__(self, xs, kwargs=None):
+    def __call__(self, xs, **kwargs):
         self.kwargs = kwargs
 
         y = self.forward(xs)

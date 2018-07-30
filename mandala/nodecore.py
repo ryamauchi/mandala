@@ -8,31 +8,32 @@ class Node(object):
 
     Args:
         func (function): The function applied to the argument.
-        args (Node, list or tuple): Arguments of the function.
+        input_nodes (Node, list or tuple): Argument nodes of the function.
         retain_data (bool): If True, retain computation result.
 
     Attributes:
         data: Computation result of this Node.
     '''
-    def __init__(self, func, args, retain_data=False):
+    def __init__(self, func, input_nodes, retain_data=False, **kwargs):
         self.func = func
         self.retain_data = retain_data
         self._data = None
         self._reference_count = 0
+        self.kwargs = kwargs
 
-        _args = []
-        if not isinstance(args, (tuple, list)):
-            args = [args]
-        for arg in args:
-            if not isinstance(arg, Node):
-                arg = Variable(arg)
-            arg._increment_ref_count()
-            _args.append(arg)
-        self.args = tuple(_args)
+        _input_nodes = []
+        if not isinstance(input_nodes, (tuple, list)):
+            input_nodes = [input_nodes]
+        for node in input_nodes:
+            if not isinstance(node, Node):
+                node = Variable(node)
+            node._increment_ref_count()
+            _input_nodes.append(node)
+        self.input_nodes = tuple(_input_nodes)
 
     def apply_func(self):
-        expanded_args = [arg.data for arg in self.args]
-        return self.func(*expanded_args)
+        expanded_nodes = [node.data for node in self.input_nodes]
+        return self.func(*expanded_nodes, **self.kwargs)
 
     def _increment_ref_count(self):
         self._reference_count += 1
@@ -45,8 +46,8 @@ class Node(object):
             self._data = None
 
     def __del__(self):
-        for arg in self.args:
-            arg._decrement_ref_count()
+        for node in self.input_nodes:
+            node._decrement_ref_count()
 
     def __len__(self):
         return len(self.data)
@@ -64,7 +65,7 @@ class Node(object):
 
     @property
     def shape(self):
-        # TODO: calc shape from shape of args.
+        # TODO: calc shape from shape of input_nodes.
         return self.data.shape
 
 
@@ -78,7 +79,7 @@ class Variable(Node):
     '''
     def __init__(self, data):
         self.func = None
-        self.args = ()
+        self.input_nodes = ()
         self._data = data
         self.retain_data = True
         self._reference_count = 0
