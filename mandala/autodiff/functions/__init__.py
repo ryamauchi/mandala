@@ -1,5 +1,11 @@
 from mandala.autodiff.functions import basic_math  # NOQA
 from mandala.autodiff.functions import get_item  # NOQA
+from mandala.autodiff.functions import reshape
+
+# install Node functiions.
+basic_math.install_node_arithmetics()
+get_item.install_node_get_item()
+reshape.install_node_reshape()
 
 from mandala.autodiff.functions.basic_math import add  # NOQA
 from mandala.autodiff.functions.basic_math import mul  # NOQA
