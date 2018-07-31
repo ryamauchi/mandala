@@ -20,8 +20,15 @@ class ReshapeFunction(autodiff.AutoDiff):
 
     def backward(self, xs, gy):
         gx = Node(reshape_backward, [self.x_shape, gy])
-        return gx
+        return gx,
 
 
 def reshape(x, shape):
     return ReshapeFunction()([x, shape])
+
+def _reshape(x, *shape):
+    return ReshapeFunction()([x, shape])
+
+
+def install_node_reshape():
+    Node.reshape = _reshape

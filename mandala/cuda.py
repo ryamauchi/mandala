@@ -2,7 +2,7 @@ import numpy
 from mandala import Variable
 
 available = False
-cudnn_enable = False
+cudnn_enabled = False
 
 try:
     import cupy
@@ -13,7 +13,7 @@ except Exception as e:
 if available:
     try:
         import cupy.cudnn
-        cudnn_enable = True
+        cudnn_enabled = True
         cudnn = cupy.cudnn
     except Exception as e:
         _resolution_error = e
