@@ -7,9 +7,14 @@ from mandala.autodiff.functions.basic_math import log  # NOQA
 from mandala.autodiff.functions.basic_math import neg  # NOQA
 from mandala.autodiff.functions.basic_math import absolute  # NOQA
 from mandala.autodiff.functions.basic_math import matmul  # NOQA
+from mandala.autodiff.functions.basic_math import install_node_arithmetics  # NOQA
+
+from mandala.autodiff.functions.get_item import get_item  # NOQA
+from mandala.autodiff.functions.get_item import install_node_get_item  # NOQA
 
 from mandala.autodiff.functions.reshape import reshape  # NOQA
 from mandala.autodiff.functions.reshape import ReshapeFunction  # NOQA
+from mandala.autodiff.functions.reshape import install_node_reshape  # NOQA
 
 from mandala.autodiff.functions.relu import relu  # NOQA
 from mandala.autodiff.functions.relu import ReLUFunction  # NOQA

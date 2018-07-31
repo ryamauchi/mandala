@@ -12,7 +12,7 @@ def forward_relu(x):
     
     xp = cuda.get_array_module(x)
 
-    if xp == cuda.cupy and cuda.cudnn_enabled:
+    if cuda.cudnn_enabled and xp == cuda.cupy :
         y = cudnn.activation_forward(x, _mode)
     else:
         y = xp.maximum(x, 0)
@@ -23,7 +23,7 @@ def forward_relu(x):
 def backward_relu(x, y, gy):
     xp = cuda.get_array_module(x)
 
-    if xp == cuda.cupy and cuda.cudnn_enabled:
+    if cuda.cudnn_enabled and xp == cuda.cupy:
         gx = cudnn.activation_backward(x, y, gy, _mode)
     else:
         gx = (x > 0) * gy
