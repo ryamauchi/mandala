@@ -1,4 +1,3 @@
-import cupy
 from mandala import cuda
 from mandala import Node
 from mandala.autodiff import autodiff
@@ -6,14 +5,14 @@ from mandala.autodiff import autodiff
 
 if cuda.cudnn_enabled:
     cudnn = cuda.cudnn
-    _mode = cupy.cuda.cudnn.CUDNN_ACTIVATION_RELU
+    _mode = cuda.cupy.cuda.cudnn.CUDNN_ACTIVATION_RELU
 
 
 def forward_relu(x):
     
     xp = cuda.get_array_module(x)
 
-    if xp == cupy and cuda.cudnn_enable:
+    if xp == cuda.cupy and cuda.cudnn_enabled:
         y = cudnn.activation_forward(x, _mode)
     else:
         y = xp.maximum(x, 0)
@@ -24,7 +23,7 @@ def forward_relu(x):
 def backward_relu(x, y, gy):
     xp = cuda.get_array_module(x)
 
-    if xp == cupy and cuda.cudnn_enable:
+    if xp == cuda.cupy and cuda.cudnn_enabled:
         gx = cudnn.activation_backward(x, y, gy, _mode)
     else:
         gx = (x > 0) * gy
