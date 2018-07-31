@@ -4,7 +4,7 @@ from mandala import Node
 from mandala.autodiff import autodiff
 
 
-if cuda.cudnn_enable:
+if cuda.cudnn_enabled:
     cudnn = cuda.cudnn
     _mode = cupy.cuda.cudnn.CUDNN_ACTIVATION_RELU
 
