@@ -21,7 +21,7 @@ def im2col(img, kh, kw, sy, sx, ph, pw, pval=0, cover_all=False,
 
     img = xp.pad(img,
                  ((0, 0), (0, 0), (ph, ph + sy - 1), (pw, pw + sx - 1)),
-                  mode='constant', constant_values=(pval,))
+                 mode='constant', constant_values=(pval,))
     col = xp.ndarray((n, c, kh, kw, out_h, out_w), dtype=img.dtype)
 
     for j in range(kh):
@@ -40,7 +40,7 @@ def col2im(col, sy, sx, ph, pw, h, w, dy=1, dx=1):
 
     n, c, kh, kw, out_h, out_w = col.shape
     img = xp.zeros((n, c, h + 2 * ph + sy - 1, w + 2 * pw + sx - 1),
-                    dtype=col.dtype)
+                   dtype=col.dtype)
     for j in range(kh):
         jdy = j * dy
         j_lim = jdy + sy * out_h

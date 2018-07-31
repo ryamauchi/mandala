@@ -1,6 +1,6 @@
 from mandala import cuda
 from mandala import Node
-from mandala import basic_math
+from mandala.functions import basic_math
 from mandala.autodiff import autodiff
 
 

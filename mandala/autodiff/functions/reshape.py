@@ -26,6 +26,7 @@ class ReshapeFunction(autodiff.AutoDiff):
 def reshape(x, shape):
     return ReshapeFunction()([x, shape])
 
+
 def _reshape(x, *shape):
     return ReshapeFunction()([x, shape])
 

@@ -1,10 +1,10 @@
-from mandala.nodecore import Node
-from mandala.nodecore import Variable
-from mandala import basic_math
-from mandala import get_item
+from mandala.nodecore import Node   # NOQA
+from mandala.nodecore import Variable   # NOQA
+from mandala import functions
 from mandala import cuda
 
 
-basic_math.install_node_arithmetics()
-get_item.install_node_get_item()
+functions.basic_math.install_node_arithmetics()
+functions.get_item.install_node_get_item()
+functions.reshape.install_node_reshape()
 cuda.install_variable_cuda()
