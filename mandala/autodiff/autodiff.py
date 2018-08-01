@@ -26,11 +26,22 @@ def backward(y, gy=Variable(1.)):
         if not isinstance(x, Node):
             return None
         if not hasattr(x, 'grad'):
-            x.grad = Variable(0.)
-        x.grad += gx
+            x.grad = None
+        if x.grad == None:
+            x.grad = gx
+        else:
+            x.grad += gx
         if hasattr(x, 'creator'):
             backward(x, gx)
 
 
+def cleargrads(x):
+    x.grad = None
+
+
 def install_node_backward():
     Node.backward = backward
+
+
+def install_node_cleargrads():
+    Node.cleargrads = cleargrads

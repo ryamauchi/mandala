@@ -16,6 +16,9 @@ from mandala.autodiff.functions.reshape import reshape  # NOQA
 from mandala.autodiff.functions.reshape import ReshapeFunction  # NOQA
 from mandala.autodiff.functions.reshape import install_node_reshape  # NOQA
 
+from mandala.autodiff.functions.sum import SumFunction  # NOQA
+from mandala.autodiff.functions.sum import sum  # NOQA
+
 from mandala.autodiff.functions.relu import relu  # NOQA
 from mandala.autodiff.functions.relu import ReLUFunction  # NOQA
 
