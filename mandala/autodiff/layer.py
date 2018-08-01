@@ -20,10 +20,6 @@ class Layer(object):
         for param in self.params.values():
             param.to_cpu()
 
-    def to_cpu(self):
-        for param in self.params.values():
-            param.to_cpu()
-
     def cleargrads(self):
         for param in self.params.values():
             param.cleargrads()

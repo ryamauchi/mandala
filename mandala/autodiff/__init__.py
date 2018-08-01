@@ -1,7 +1,7 @@
 from mandala.autodiff import autodiff
 from mandala.autodiff import functions
-from mandala.autodiff.graph import Graph
-from mandala.autodiff.autodiff import AutoDiff
+from mandala.autodiff.graph import Graph  # NOQA
+from mandala.autodiff.autodiff import AutoDiff  # NOQA
 
 
 # install Node functiions.

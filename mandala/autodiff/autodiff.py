@@ -27,7 +27,7 @@ def backward(y, gy=Variable(1.)):
             return None
         if not hasattr(x, 'grad'):
             x.grad = None
-        if x.grad == None:
+        if x.grad is None:
             x.grad = gx
         else:
             x.grad += gx
