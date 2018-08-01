@@ -49,8 +49,8 @@ def _to_cpu_variable(x):
     x.data = to_cpu(x.data)
 
 
-def _to_gpu_variable(x):
-    x.data = to_gpu(x.data)
+def _to_gpu_variable(x, device=None):
+    x.data = to_gpu(x.data, device)
 
 
 def install_variable_cuda():

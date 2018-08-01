@@ -15,9 +15,9 @@ class Graph(object):
 
         object.__setattr__(self, key, value)
 
-    def to_gpu(self):
+    def to_gpu(self, device=None):
         for param in self.params.values():
-            param.to_gpu()
+            param.to_gpu(device)
 
     def to_cpu(self):
         for param in self.params.values():

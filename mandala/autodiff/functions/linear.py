@@ -57,7 +57,8 @@ class Linear(layer.Layer):
         if nobias:
             self.b = None
         else:
-            self.b = Variable(numpy.zeros(out_ch, dtype=numpy.float32))
+            self.b = Variable(
+                numpy.zeros(out_ch, dtype=numpy.float32))
 
     def __call__(self, x):
         return LinearFunction()([x, self.W, self.b])
