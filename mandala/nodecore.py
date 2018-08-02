@@ -20,6 +20,7 @@ class Node(object):
         self._data = None
         self._reference_count = 0
         self.kwargs = kwargs
+        self.reserved = False
 
         _input_nodes = []
         if not isinstance(input_nodes, (tuple, list)):
@@ -27,7 +28,6 @@ class Node(object):
         for node in input_nodes:
             if not isinstance(node, Node):
                 node = Variable(node)
-            node._increment_ref_count()
             _input_nodes.append(node)
         self.input_nodes = tuple(_input_nodes)
 
@@ -36,28 +36,44 @@ class Node(object):
         return self.func(*expanded_nodes, **self.kwargs)
 
     def _increment_ref_count(self):
+        if self._reference_count == 0:
+            for node in self.input_nodes:
+                node._increment_ref_count()
         self._reference_count += 1
 
     def _decrement_ref_count(self):
+        if self._reference_count == 1:
+            for node in self.input_nodes:
+                node._decrement_ref_count()
+            if not self.retain_data:
+                self._data = None
         if self._reference_count > 0:
             self._reference_count -= 1
 
-        if self._reference_count == 0 and not self.retain_data:
-            self._data = None
-
     def __del__(self):
-        for node in self.input_nodes:
-            node._decrement_ref_count()
+        if self.reserved:
+            for node in self.input_nodes:
+                node._decrement_ref_count()
 
     def __len__(self):
         return len(self.data)
+
+    def reserve(self):
+        self.reserved = True
+        self._increment_ref_count()
+
+    def unreserve(self):
+        self.reserved = False
+        self._decrement_ref_count()
 
     @property
     def data(self):
         if self._data is None:
             data = self.apply_func()
-            self._decrement_ref_count()
-            if self._reference_count > 0 or self.retain_data:
+            if self.reserved:
+                self._decrement_ref_count()
+            if (self._reference_count > 0
+                    or self.retain_data):
                 self._data = data
         else:
             data = self._data
@@ -83,6 +99,7 @@ class Variable(Node):
         self._data = data
         self.retain_data = True
         self._reference_count = 0
+        self.reserved = False
 
     def apply_func(self):
         raise NotImplementedError()
