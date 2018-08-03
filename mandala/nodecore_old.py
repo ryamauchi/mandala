@@ -14,11 +14,13 @@ class Node(object):
     Attributes:
         data: Computation result of this Node.
     '''
-    def __init__(self, func, input_nodes, **kwargs):
+    def __init__(self, func, input_nodes, retain_data=False, **kwargs):
         self.func = func
-        self.kwargs = kwargs
+        self.retain_data = retain_data
         self._data = None
         self._reference_count = 0
+        self.kwargs = kwargs
+        self.reserved = False
 
         _input_nodes = []
         if not isinstance(input_nodes, (tuple, list)):
@@ -26,59 +28,56 @@ class Node(object):
         for node in input_nodes:
             if not isinstance(node, Node):
                 node = Variable(node)
-                code._increment_ref_count()
             _input_nodes.append(node)
         self.input_nodes = tuple(_input_nodes)
 
     def apply_func(self):
-        expanded_nodes = [
-            node.data for node in self.input_nodes]
+        expanded_nodes = [node.data for node in self.input_nodes]
         return self.func(*expanded_nodes, **self.kwargs)
 
-    def _increment_ref_count(self, count=1):
+    def _increment_ref_count(self):
         if self._reference_count == 0:
             for node in self.input_nodes:
                 node._increment_ref_count()
+        self._reference_count += 1
 
-        self._reference_count += count
-
-    def _decrement_ref_count(self, count=1):
-        if (self._reference_count > 0
-            and self._reference_count <= count):
+    def _decrement_ref_count(self):
+        if self._reference_count == 1:
             for node in self.input_nodes:
                 node._decrement_ref_count()
-            self._data = None
-
-        self._reference_count = max(
-            0, self._reference_count - count)
-
-    def reserve(self, count=1):
-        self._increment_ref_count(count)
-
-    def unreserve(self, count=1):
-        self._decrement_ref_count(count)
-
-    @property
-    def reserve_count(self):
-        return self._reference_count
-
-    @property
-    def data(self):
-        if self._data is not None:
-            data = self._data
-        else:
-            data = self.apply_func()
-            if self._reference_count > 1:
-                self._data = data
-        self._decrement_ref_count()
-        return data
+            if not self.retain_data:
+                self._data = None
+        if self._reference_count > 0:
+            self._reference_count -= 1
 
     def __del__(self):
-        pass
-        #self._decrement_ref_count(self._reference_count)
+        if self.reserved:
+            for node in self.input_nodes:
+                node._decrement_ref_count()
 
     def __len__(self):
         return len(self.data)
+
+    def reserve(self):
+        self.reserved = True
+        self._increment_ref_count()
+
+    def unreserve(self):
+        self.reserved = False
+        self._decrement_ref_count()
+
+    @property
+    def data(self):
+        if self._data is None:
+            data = self.apply_func()
+            if self.reserved:
+                self._decrement_ref_count()
+            if (self._reference_count > 0
+                    or self.retain_data):
+                self._data = data
+        else:
+            data = self._data
+        return data
 
     @property
     def shape(self):
@@ -98,7 +97,9 @@ class Variable(Node):
         self.func = None
         self.input_nodes = ()
         self._data = data
-        self._reference_count = 1
+        self.retain_data = True
+        self._reference_count = 0
+        self.reserved = False
 
     def apply_func(self):
         raise NotImplementedError()
