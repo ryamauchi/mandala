@@ -39,26 +39,27 @@ class Node(object):
         self._reference_count += count
 
     def _decrement_ref_count(self, count=1):
+        if (self._reference_count > 0
+            and self._reference_count <= count):
+            self._data = None
         self._reference_count = max(
             0, self._reference_count - count)
 
     @property
     def data(self):
-        self._decrement_ref_count()
         if self._data is not None:
             data = self._data
         else:
             data = self.apply_func()
-
-        if self._reference_count > 0:
             self._data = data
-        else:
-            self._data = None
+        self._decrement_ref_count()
         return data
 
     def __del__(self):
-        for node in self.input_nodes:
-            node._decrement_ref_count()
+        self._data = None
+        if self._reference_count > 0:
+            for node in self.input_nodes:
+                node._decrement_ref_count()
 
     def __len__(self):
         return len(self.data)
