@@ -9,7 +9,7 @@ class Node(object):
     Args:
         func (function): The function applied to the argument.
         input_nodes (Node, list or tuple): Argument nodes of the function.
-        retain_data (bool): If True, retain computation result.
+        # retain_data (bool): If True, retain computation result.
 
     Attributes:
         data: Computation result of this Node.
@@ -26,7 +26,7 @@ class Node(object):
         for node in input_nodes:
             if not isinstance(node, Node):
                 node = Variable(node)
-                code._increment_ref_count()
+            node._increment_ref_count()
             _input_nodes.append(node)
         self.input_nodes = tuple(_input_nodes)
 
@@ -36,46 +36,29 @@ class Node(object):
         return self.func(*expanded_nodes, **self.kwargs)
 
     def _increment_ref_count(self, count=1):
-        if self._reference_count == 0:
-            for node in self.input_nodes:
-                node._increment_ref_count()
-
         self._reference_count += count
 
     def _decrement_ref_count(self, count=1):
-        if (self._reference_count > 0
-            and self._reference_count <= count):
-            for node in self.input_nodes:
-                node._decrement_ref_count()
-            self._data = None
-
         self._reference_count = max(
             0, self._reference_count - count)
 
-    def reserve(self, count=1):
-        self._increment_ref_count(count)
-
-    def unreserve(self, count=1):
-        self._decrement_ref_count(count)
-
-    @property
-    def reserve_count(self):
-        return self._reference_count
-
     @property
     def data(self):
+        self._decrement_ref_count()
         if self._data is not None:
             data = self._data
         else:
             data = self.apply_func()
-            if self._reference_count > 1:
-                self._data = data
-        self._decrement_ref_count()
+
+        if self._reference_count > 0:
+            self._data = data
+        else:
+            self._data = None
         return data
 
     def __del__(self):
-        pass
-        #self._decrement_ref_count(self._reference_count)
+        for node in self.input_nodes:
+            node._decrement_ref_count()
 
     def __len__(self):
         return len(self.data)
@@ -98,7 +81,7 @@ class Variable(Node):
         self.func = None
         self.input_nodes = ()
         self._data = data
-        self._reference_count = 1
+        self._reference_count = 0
 
     def apply_func(self):
         raise NotImplementedError()
