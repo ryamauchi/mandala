@@ -40,7 +40,7 @@ class Node(object):
 
     def _decrement_ref_count(self, count=1):
         if (self._reference_count > 0
-            and self._reference_count <= count):
+                and self._reference_count <= count):
             self._data = None
         self._reference_count = max(
             0, self._reference_count - count)

@@ -12,7 +12,7 @@ from mandala.autodiff.utils_conv import col2im
 def convolution_2d_forward(x, W, b, sy, sx, ph, pw,
                            cover_all, dy, dx, cls):
     xp = cuda.get_array_module(x)
-    
+
     _, _, kh, kw = W.shape
     col = im2col(x, kh, kw, sy, sx, ph, pw,
                  cover_all=cover_all, dy=dy, dx=dx)
