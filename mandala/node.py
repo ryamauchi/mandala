@@ -5,9 +5,8 @@ class _RefCount:
         self.node = node
 
     def _check_count(self):
-        if self.count <= 0:
+        if self.count == 0:
             self.node.clear_output()
-            self.count = 0
 
     def __iadd__(self, x):
         self.count += x
@@ -40,7 +39,7 @@ class Node:
                 continue
             input_._ref_count += addend
 
-    def apply(self):
+    def _apply(self):
         _inputs = [input_.output for input_ in self.inputs]
         self._output = self.func(_inputs, *self.args, **self.kwargs)
         self._ref_to_inputs(-1)
@@ -53,11 +52,25 @@ class Node:
     @property
     def output(self):
         if self._output is None:
-            self.apply()
+            self._apply()
         return self._output
 
+    def __eq__(self, node):
+        if not isinstance(node, Node):
+            return False
+        if self.func != node.func:
+            return False
+        if self.inputs != node.inputs:
+            return False
+        if self.args != node.args:
+            return False
+        if self.kwargs != node.kwargs:
+            return False
+        return True
+
     def __del__(self):
-        self.clear_output()
+        if self._output is None:
+            self._ref_to_inputs(-1)
 
     def __repr__(self):
         _repr = '<{}: output={}>'.format(
